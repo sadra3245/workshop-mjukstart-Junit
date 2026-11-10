@@ -1,5 +1,7 @@
 package se.yrgo.libraryapp.validators;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.regex.Pattern;
 
 /**
@@ -8,7 +10,8 @@ import java.util.regex.Pattern;
  * I.e. no funny characters or whitespace and at least four characters long.
  */
 public final class Username {
-    private static Pattern regex = Pattern.compile("[@._a-zA-Z0-]{4,}");
+    // corrected bug in pattern regex, missing -9 for numbers
+    private static final Pattern regex = Pattern.compile("[@._a-zA-Z0-9]{4,}");
 
     private Username() {}
 
@@ -26,4 +29,6 @@ public final class Username {
     public static boolean validate(String name) {
         return regex.matcher(name).matches();
     }
+
+
 }
