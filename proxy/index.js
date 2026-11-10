@@ -1,6 +1,6 @@
-const joobyPort = 8080
-const vuePort = 3000
-const proxyPort = 8282
+    const joobyPort = 8080
+    const vuePort = 5173
+    const proxyPort = 8282
 
 const joobyUrl = `http://localhost:${joobyPort}/`
 const vueUrl = `http://localhost:${vuePort}/`
