@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * This validator checks that the real names match our high standard for proper names. I.e. no bad
  * words.
  */
-public final class RealName {
+public final class  RealName {
     private static final Logger logger = LoggerFactory.getLogger(RealName.class);
     private static final Set<String> invalidWords = new HashSet<>();
 
@@ -47,7 +47,7 @@ public final class RealName {
         String cleanName = Utils.cleanAndUnLeet(name);
         String[] words = cleanName.split("\\W+");
         for (String word : words) {
-            if (invalidWords.contains(word.toLowerCase())) {
+            if (invalidWords.contains(word.toLowerCase().trim())) {
                 return false;
             }
         }
