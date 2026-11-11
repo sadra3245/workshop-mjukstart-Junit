@@ -16,15 +16,18 @@ import org.slf4j.LoggerFactory;
  * words.
  */
 public final class RealName {
-    private static Logger logger = LoggerFactory.getLogger(RealName.class);
+    private static final Logger logger = LoggerFactory.getLogger(RealName.class);
     private static final Set<String> invalidWords = new HashSet<>();
 
     static {
-        try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt");
-                BufferedReader reader =
-                        new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            while (reader.readLine() != null) {
-                invalidWords.addAll(reader.lines().collect(Collectors.toSet()));
+        try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt")) {
+            assert is != null;
+            try (BufferedReader reader =
+                            new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                String line;
+                while ( (line =reader.readLine()) != null) {
+                    invalidWords.add(line);
+                }
             }
         } catch (IOException ex) {
             logger.error("Unable to initialize list of bad words", ex);
@@ -43,8 +46,8 @@ public final class RealName {
     public static boolean validate(String name) {
         String cleanName = Utils.cleanAndUnLeet(name);
         String[] words = cleanName.split("\\W+");
-        for (int i = 1; i < words.length; i++) {
-            if (invalidWords.contains(words[i])) {
+        for (String word : words) {
+            if (invalidWords.contains(word.toLowerCase())) {
                 return false;
             }
         }

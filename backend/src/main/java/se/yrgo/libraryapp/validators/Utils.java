@@ -31,15 +31,26 @@ class Utils {
      * @return a string without non alphabetic characters (except whitespace)
      */
     static String cleanAndUnLeet(String str) {
-        final var leetMap = Map.of('1', 'l', '3', 'e', '4', 'a', '5', 's', '6', 'b', '7', 't', '8', 'b', '0', 'o');
 
+
+        final var leetMap = Map.of(
+                '0', 'o',
+                '1', 'l',
+                '2','t',
+                '3', 'e',
+                '4', 'a',
+                '5', 's',
+                '6', 'b',
+                '7', 't'
+                );
         final StringBuilder res = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
+
             char newChar = leetMap.getOrDefault(ch, ch);
             res.append(newChar);
         }
 
-        return onlyLettersAndWhitespace(res.toString());
+        return onlyLettersAndWhitespace(res.toString().toLowerCase().trim());
     }
 }
