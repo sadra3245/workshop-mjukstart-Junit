@@ -40,7 +40,7 @@ public class UtilsTest {
 
     @ParameterizedTest
     @CsvSource( {
-            "1l3e4a5s6b7t8b0o, lleessbbttbboo",
+            "1l3e4a5s6b7t8b0o, lleeaassbbttboo",
     "sadra?#_, sadra"})
 
     void ok(String name, String expected){

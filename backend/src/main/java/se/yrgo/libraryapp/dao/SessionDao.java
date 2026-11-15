@@ -22,7 +22,7 @@ public class SessionDao {
     private DataSource ds;
 
     @Inject
-    SessionDao(DataSource ds) {
+   public SessionDao(DataSource ds) {
         this.ds = ds;
     }
 

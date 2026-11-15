@@ -16,12 +16,12 @@ import se.yrgo.libraryapp.services.*;
 @Path("/login")
 public class LoginController {
 
-    private UserService userService;
-    private RoleDao roleDao;
-    private SessionDao sessionDao;
+    private final UserService userService;
+    private final RoleDao roleDao;
+    private final SessionDao sessionDao;
 
     @Inject
-    LoginController(UserService userService, RoleDao roleDao, SessionDao sessionDao) {
+    public LoginController(UserService userService, RoleDao roleDao, SessionDao sessionDao) {
         this.userService = userService;
         this.roleDao = roleDao;
         this.sessionDao = sessionDao;
@@ -81,7 +81,7 @@ public class LoginController {
         return sessionDao.validate(UUID.fromString(sessionCookie));
     }
 
-    private Cookie createSessionCookie(UUID session) {
+    public Cookie createSessionCookie(UUID session) {
         Cookie cookie = new Cookie("session", session.toString());
         cookie.setSameSite(SameSite.LAX);
         cookie.setHttpOnly(true);

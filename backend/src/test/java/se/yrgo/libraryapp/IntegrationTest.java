@@ -5,6 +5,7 @@ import io.jooby.StatusCode;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class IntegrationTest {
         .build();
 
     try (Response rsp = client.newCall(req).execute()) {
-      assertEquals("", rsp.body().string());
+        Assertions.assertNotNull(rsp.body());
+        assertEquals("", rsp.body().string());
       assertEquals(StatusCode.OK.value(), rsp.code());
     }
   }

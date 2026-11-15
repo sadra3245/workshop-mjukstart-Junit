@@ -17,7 +17,7 @@ public class ClassificationDao {
     private DataSource ds;
 
     @Inject
-    ClassificationDao(DataSource ds) {
+    public ClassificationDao(DataSource ds) {
         this.ds = ds;
     }
 

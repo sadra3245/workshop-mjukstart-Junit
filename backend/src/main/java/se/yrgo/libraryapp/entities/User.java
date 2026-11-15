@@ -63,6 +63,18 @@ public class User {
         return true;
     }
 
+    public void setId(UserId id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", user=" + name + ", realname=" + realname + "]";

@@ -12,7 +12,7 @@ public class ClassificationController {
     private ClassificationDao classDao;
 
     @Inject
-    ClassificationController(ClassificationDao classDao) {
+    public ClassificationController(ClassificationDao classDao) {
         this.classDao = classDao;
     }
 
