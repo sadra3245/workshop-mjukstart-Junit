@@ -47,7 +47,6 @@ public class SessionDaoIntegrationTest{
     @Test
     void created(){
         UserId userId = UserId.of(1);
-        ;
 
         UUID uuidList = sessionDao.create(userId);
 

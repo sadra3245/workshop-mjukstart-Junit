@@ -72,12 +72,25 @@ public class UserDaoIntegrationTest {
 
     @Test
     void getGenId(){
-
         UserDao userDao = new UserDao(ds);
 
         Optional<LoginInfo> loginInfo = userDao.getLoginInfo("test");
 
         assertThat(loginInfo).isNotEmpty();
+    }
+
+    @Test
+    void sameUsersFailed(){
+
+        UserDao userDao = new UserDao(ds);
+
+        boolean user = userDao.register("sad","sadra","secret");
+
+        boolean user1 = userDao.register("sad","sadra","secret");
+
+        assertThat(user).isTrue();
+
+        assertThat(user1).isFalse();
     }
 }
 
