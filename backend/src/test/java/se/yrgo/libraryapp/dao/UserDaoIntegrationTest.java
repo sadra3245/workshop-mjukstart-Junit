@@ -10,33 +10,59 @@ import java.util.Optional;
 import javax.sql.DataSource;
 
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import io.jooby.JoobyTest;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import com.radcortez.flyway.test.annotation.H2;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import se.yrgo.libraryapp.App;
 import se.yrgo.libraryapp.entities.LoginInfo;
 import se.yrgo.libraryapp.entities.Role;
 import se.yrgo.libraryapp.entities.User;
 import se.yrgo.libraryapp.entities.UserId;
-@Tag("integration")
-@H2
+@Testcontainers
+@JoobyTest(value = App.class, factoryMethod = "createApp")
 public class UserDaoIntegrationTest {
 
-    RoleDao roleDao;
-    static DataSource ds;
-    @BeforeAll
-    static void initDataSource() {
-// this way we do not need to create a new datasource every time
-        final JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:mem:test");
-        UserDaoIntegrationTest.ds = ds;
+    @Container
+    private final static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.29");
+    private static DataSource ds;
 
-        Flyway flyway = Flyway.configure() .dataSource(ds).cleanDisabled(false).load();
-        flyway.clean();
+    @BeforeAll
+    static void setup() {
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(mysql.getJdbcUrl());
+        hikariConfig.setUsername(mysql.getUsername());
+        hikariConfig.setPassword(mysql.getPassword());
+        hikariConfig.setDriverClassName(mysql.getDriverClassName());
+        UserDaoIntegrationTest.ds = new HikariDataSource(hikariConfig);
+        Flyway flyway = Flyway.configure().dataSource(ds).load();
         flyway.migrate();
     }
+
+    public static App createApp() {
+        System.setProperty("db.url", mysql.getJdbcUrl());
+        System.setProperty("db.user", mysql.getUsername());
+        System.setProperty("db.password", mysql.getPassword());
+        return new App();
+    }
+
+    @AfterAll
+    static void reset() {
+        System.clearProperty("db.url");
+        System.clearProperty("db.user");
+        System.clearProperty("db.password");
+    }
+
+
     @Test
     void getUserById() {
 // this data comes from the test migration files
@@ -61,7 +87,7 @@ public class UserDaoIntegrationTest {
             Optional<LoginInfo> loginInfo = userDao.getLoginInfo("sadra32");
         assertThat(loginInfo).isPresent();
 
-         roleDao = new RoleDao(ds);
+        RoleDao roleDao = new RoleDao(ds);
        List<Role> roles = roleDao.get(loginInfo.get().getUserId());
         
        assertThat(roles).isNotEmpty();

@@ -7,11 +7,12 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.pac4j.core.exception.CredentialsException;
 import se.yrgo.libraryapp.controllers.LogoutController;
 import se.yrgo.libraryapp.dao.SessionDao;
 import se.yrgo.libraryapp.entities.UserId;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import javax.sql.DataSource;
 import java.util.UUID;
@@ -48,8 +49,8 @@ public class LogoutControllerTest {
         UUID session = sessionDao.create(userId);
 
         assertThat(sessionDao.validate(session)).isEqualTo(userId);
+        sessionDao.delete(session);
 
-
-        Cookie cookie = new Cookie("session","");
+        assertThatThrownBy(() -> sessionDao.validate(session)).isInstanceOf(CredentialsException.class);
     }
 }
